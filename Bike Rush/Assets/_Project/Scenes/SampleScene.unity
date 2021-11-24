@@ -123,6 +123,109 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1001 &24206184
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 7598119644634601380, guid: cc69e80059c7f3e4a80e1bd9ca8071ae, type: 3}
+      propertyPath: m_Name
+      value: Character
+      objectReference: {fileID: 0}
+    - target: {fileID: 7598119644634601381, guid: cc69e80059c7f3e4a80e1bd9ca8071ae, type: 3}
+      propertyPath: m_RootOrder
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 7598119644634601381, guid: cc69e80059c7f3e4a80e1bd9ca8071ae, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 35.06
+      objectReference: {fileID: 0}
+    - target: {fileID: 7598119644634601381, guid: cc69e80059c7f3e4a80e1bd9ca8071ae, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.41
+      objectReference: {fileID: 0}
+    - target: {fileID: 7598119644634601381, guid: cc69e80059c7f3e4a80e1bd9ca8071ae, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -230.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7598119644634601381, guid: cc69e80059c7f3e4a80e1bd9ca8071ae, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7598119644634601381, guid: cc69e80059c7f3e4a80e1bd9ca8071ae, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7598119644634601381, guid: cc69e80059c7f3e4a80e1bd9ca8071ae, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7598119644634601381, guid: cc69e80059c7f3e4a80e1bd9ca8071ae, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7598119644634601381, guid: cc69e80059c7f3e4a80e1bd9ca8071ae, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7598119644634601381, guid: cc69e80059c7f3e4a80e1bd9ca8071ae, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7598119644634601381, guid: cc69e80059c7f3e4a80e1bd9ca8071ae, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: cc69e80059c7f3e4a80e1bd9ca8071ae, type: 3}
+--- !u!1 &24206185 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7598119644634601380, guid: cc69e80059c7f3e4a80e1bd9ca8071ae, type: 3}
+  m_PrefabInstance: {fileID: 24206184}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &24206186
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 24206185}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c107685e354bb4d4683a3edebd392341, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  velocity: {x: 0, y: 0, z: 1}
+  AnimatorSpeed: 1.7
+  VelocityGrowthModifier: 3
+--- !u!65 &24206187
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 24206185}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.1330261, y: 2.535564, z: 4.1718445}
+  m_Center: {x: -0.6, y: 1.407988, z: 0.3066101}
+--- !u!65 &24206188
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 24206185}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.1330261, y: 2.5355637, z: 4.1718445}
+  m_Center: {x: 0.6, y: 1.4079884, z: 0.3066101}
 --- !u!1001 &47590210
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3802,8 +3905,8 @@ GameObject:
   - component: {fileID: 1640200529}
   - component: {fileID: 1640200530}
   m_Layer: 0
-  m_Name: Character
-  m_TagString: Untagged
+  m_Name: MainPlayer
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -3867,7 +3970,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   VelocityDelta: 0.5
-  MaxVelocity: 12
+  MaxVelocity: 6
   GrowVelocityX: 500
 --- !u!1001 &1643472841
 PrefabInstance:

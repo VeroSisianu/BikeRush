@@ -77,12 +77,10 @@ public class PlayerController : MonoBehaviour
         if (deltaPos.x > 0 && transform.position.x < bounds.y)
         {
             rb.velocity = new Vector3(deltaPos.x * GrowVelocityX, 0, velocityChanger);
-            Debug.Log("a");
         }
         else if (deltaPos.x < 0 && transform.position.x > bounds.x)
         {
             rb.velocity = new Vector3(deltaPos.x * GrowVelocityX, 0, velocityChanger);
-            Debug.Log("b");
         }
         else
         {
