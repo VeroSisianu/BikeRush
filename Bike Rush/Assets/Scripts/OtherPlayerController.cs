@@ -4,14 +4,17 @@ using UnityEngine;
 
 public class OtherPlayerController : MonoBehaviour
 {
+    int index;
     Rigidbody rb;
-    public Vector3 velocity;
-    private Vector3 direction;
+    public Vector3 velocity = new Vector3();
+    public Vector3 direction = new Vector3();
     public float AnimatorSpeed;
     public float VelocityGrowthModifier;
     Animator anim;
-    List <Coroutine> routines = new List<Coroutine>();
     Coroutine routine;
+
+    List<Coroutine> routines = new List<Coroutine>();
+    List <Collider> colsList = new List<Collider>();
 
     void Start()
     {
@@ -27,43 +30,121 @@ public class OtherPlayerController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.CompareTag("Obstacle") || other.CompareTag("Player"))
+        if((other.CompareTag("Obstacle") && other.isTrigger) || (other.CompareTag("Player") && other.isTrigger))
         {
-            direction = other.transform.position - transform.position;
-            routine = StartCoroutine(MoveAway(other));
-            routines.Add(routine);
+            StopAllCoroutines();
+            Debug.Log("entered trigger");
+            colsList.Add(other);
+            CalculateRoute();
         }
     }
-    private IEnumerator MoveAway(Collider other)
+
+    private void CalculateRoute()
     {
-        if((other.transform.position - transform.position).magnitude > 3f)
+        if(colsList.Count == 1)
         {
-            velocity.x = 0;
-            StopCoroutine(MoveAway(other));
-            Debug.Log("stop");
-        }
-        else if(direction.x > 0 && transform.position.x > 33)
-        {
-            velocity.x = -direction.x * VelocityGrowthModifier;
-            Debug.Log("clamped 1 X");
-        }
-        else if(direction.x < 0 && transform.position.x < 38)
-        {
-            velocity.x = -direction.x * VelocityGrowthModifier;
-            Debug.Log("clamped 2 X");
+            StopAllCoroutines();
+            Debug.Log("route1");
+            CheckIfOtherColliderIsBehindOrInFront();
+            routine = StartCoroutine(MoveAway(colsList[0]));
         }
         else
         {
-            velocity.x = 0;
+            float maxDistance = 0;
+            index = -1;
+            StopAllCoroutines();
+            for (int i = 0; i < colsList.Count - 1; i++)
+            {
+                for (int j = i + 1; j < colsList.Count; j++)
+                {
+                    if (Vector3.Distance(colsList[j].transform.position, colsList[i].transform.position) > maxDistance)
+                    {
+                        index = i;
+                    }
+                    Debug.Log("route2");
+                }
+            }
+            direction = ((colsList[index].transform.position + colsList[index+1].transform.position)-transform.position)/2;
+            routine = StartCoroutine(MoveAway(colsList));
         }
-        yield return new WaitForFixedUpdate();
+    }
+
+    private void CheckIfOtherColliderIsBehindOrInFront()
+    {
+        //if (colsList[0].transform.position.z > transform.position.z)
+        {
+            direction = (colsList[0].transform.position - transform.position).normalized;
+            //Debug.Log("other is in front");
+        }
+        //else
+        //{
+        //    direction = (transform.position - colsList[0].transform.position);
+        //    //direction.x = -direction.x;
+        //    Debug.Log("other is behind");
+        //}
+    }
+
+    private IEnumerator MoveAway(Collider other)
+    {
+        while (colsList.Count > 0)
+        {
+            if (direction.x < 0 && transform.position.x < 38)
+            {
+                velocity.x = direction.x * VelocityGrowthModifier;
+            }
+            else if (direction.x > 0 && transform.position.x > 33)
+            {
+                velocity.x = direction.x * VelocityGrowthModifier;
+            }
+            else
+            {
+                velocity.x = 0;
+            }
+            yield return new WaitForFixedUpdate();
+        }
+    }
+    private IEnumerator MoveAway(List<Collider> colsList)
+    {
+        while(colsList.Count>0)
+        {
+            if (direction.x > 0 && transform.position.x < 38)
+            {
+                Debug.Log("to right");
+                velocity.x = -direction.x * VelocityGrowthModifier;
+            }
+            else if (direction.x < 0 && transform.position.x > 33)
+            {
+                Debug.Log("to left");
+                velocity.x = -direction.x * VelocityGrowthModifier;
+            }
+            else
+            {
+                velocity.x = 0;
+            }
+            yield return new WaitForFixedUpdate();
+        }
     }
     private void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("Obstacle") || other.CompareTag("Player"))
         {
-            StopAllCoroutines();
-            velocity.x = 0;
+            if(colsList.Contains(other))
+            {
+                StopAllCoroutines();
+                colsList.Remove(other);
+                routine = null;
+                velocity.x = 0;
+                Debug.Log("exited trigger");
+            }
+        }
+    }
+
+    private void OnTriggerStay(Collider other)
+    { 
+        if (Vector3.Distance(other.transform.position, transform.position) < 2f && routine == null)
+        {
+            CalculateRoute();
+            Debug.Log("calculating on triggerstay route");
         }
     }
 }
