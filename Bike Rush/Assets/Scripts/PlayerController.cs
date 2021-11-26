@@ -92,4 +92,19 @@ public class PlayerController : MonoBehaviour
     {
         return new Vector3(position.x / Screen.width, 0, 0);
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Booster"))
+        {
+            rb.AddForce(Vector3.forward * 2, ForceMode.VelocityChange);
+        }
+    }
+    private void OnTriggerStay(Collider other)
+    {
+       if (other.CompareTag("Booster"))
+       {
+            rb.AddForce(Vector3.forward * 2, ForceMode.VelocityChange);
+       }
+    }
 }
