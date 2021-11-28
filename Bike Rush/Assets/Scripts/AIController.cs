@@ -5,7 +5,7 @@ using UnityEngine;
 public class AIController : MonoBehaviour
 {
     int index;
-    Rigidbody rb;
+    public Rigidbody rb;
     public Vector3 velocity = new Vector3();
     public Vector3 direction = new Vector3();
     public float AnimatorSpeed;
@@ -13,6 +13,10 @@ public class AIController : MonoBehaviour
     private float originalZVelocity;
     Animator anim;
     Coroutine routine;
+    public RigidbodyConstraints unFreezed = new RigidbodyConstraints();
+    [HideInInspector]
+    public int countWheels = 0;
+
 
     List<Coroutine> routines = new List<Coroutine>();
     List <Collider> colsList = new List<Collider>();
@@ -20,17 +24,21 @@ public class AIController : MonoBehaviour
     private bool hasBikeOnLeft;
     private bool hasBikeOnRight;
 
-    void Start()
+
+    void Awake()
     {
+        
         originalZVelocity = velocity.z;
         rb = GetComponent<Rigidbody>();
+        unFreezed = rb.constraints;
         anim = GetComponentInChildren<Animator>();
         anim.speed = AnimatorSpeed;
+        rb.freezeRotation = true;
     }
 
     void FixedUpdate()
     {
-        rb.velocity = velocity;
+        rb.velocity = new Vector3(velocity.x, rb.velocity.y, velocity.z);
     }
     private void Update()
     {
@@ -55,29 +63,32 @@ public class AIController : MonoBehaviour
         {
             if(colsList.Count == 0)
             {
-                var BoosterPosMinus1 = new Vector3(other.transform.position.x, other.transform.position.y, other.transform.position.z - 4f);
-                velocity.x = (other.transform.position - transform.position).normalized.x * VelocityGrowthModifier;
+                var BoosterDirection = new Vector3(other.transform.position.x, other.transform.position.y, other.transform.position.z - 9);
+                velocity.x = (BoosterDirection - transform.position).normalized.x * VelocityGrowthModifier;
             }
         }
-        else if(other.CompareTag("Booster"))
+        else if(other.CompareTag("Booster") && other.isTrigger)
         {
-            velocity.x = 0;
+            rb.constraints = unFreezed;
+            //velocity.x = 0;
             rb.AddForce(Vector3.forward * 2, ForceMode.VelocityChange);
         }
     }
+
+    
     private void OnTriggerStay(Collider other)
     {
         if (other.CompareTag("BoosterZone"))
         {
             if (colsList.Count == 0)
             {
-                var BoosterPosMinus1 = new Vector3(other.transform.position.x, other.transform.position.y, other.transform.position.z - 4f);
-                velocity.x = (BoosterPosMinus1 - transform.position).normalized.x * VelocityGrowthModifier;
+                var BoosterDirection = new Vector3(other.transform.position.x, other.transform.position.y, other.transform.position.z - 9);
+                velocity.x = (BoosterDirection - transform.position).normalized.x * VelocityGrowthModifier;
             }
         }
-        else if (other.CompareTag("Booster"))
+        else if (other.CompareTag("Booster") && other.isTrigger)
         {
-            if (colsList.Count == 0)
+            if (colsList.Count == 0 && transform.position.x <= other.transform.position.x + 0.001f && transform.position.x >= other.transform.position.x - 0.001f)
             {
                 velocity.x = 0;
             }

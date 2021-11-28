@@ -57,7 +57,7 @@ public class PlayerController : MonoBehaviour
             if (velocityChanger > 0)
             {
                 velocityChanger -= VelocityDelta;
-                rb.velocity = new Vector3(0, 0, velocityChanger);
+                rb.velocity = new Vector3(0, rb.velocity.y, velocityChanger);
             }
             else if (!rb.IsSleeping())
             {
@@ -76,15 +76,15 @@ public class PlayerController : MonoBehaviour
     {
         if (deltaPos.x > 0 && transform.position.x < bounds.y)
         {
-            rb.velocity = new Vector3(deltaPos.x * GrowVelocityX, 0, velocityChanger);
+            rb.velocity = new Vector3(deltaPos.x * GrowVelocityX, rb.velocity.y, velocityChanger);
         }
         else if (deltaPos.x < 0 && transform.position.x > bounds.x)
         {
-            rb.velocity = new Vector3(deltaPos.x * GrowVelocityX, 0, velocityChanger);
+            rb.velocity = new Vector3(deltaPos.x * GrowVelocityX, rb.velocity.y, velocityChanger);
         }
         else
         {
-            rb.velocity = new Vector3(0, 0, velocityChanger);
+            rb.velocity = new Vector3(0, rb.velocity.y, velocityChanger);
         }
     }
 
@@ -97,14 +97,14 @@ public class PlayerController : MonoBehaviour
     {
         if (other.CompareTag("Booster"))
         {
-            rb.AddForce(Vector3.forward * 2, ForceMode.VelocityChange);
+            rb.AddForce(transform.forward * 2, ForceMode.VelocityChange);
         }
     }
     private void OnTriggerStay(Collider other)
     {
        if (other.CompareTag("Booster"))
        {
-            rb.AddForce(Vector3.forward * 2, ForceMode.VelocityChange);
+            rb.AddForce(transform.forward * 2, ForceMode.VelocityChange);
        }
     }
 }
