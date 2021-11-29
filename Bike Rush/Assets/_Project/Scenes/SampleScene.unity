@@ -2419,19 +2419,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: -5823235023123911711, guid: 5c11843321e309f4e880c7daca2b951b, type: 3}
   m_PrefabInstance: {fileID: 7598119644510935323}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &766823129
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 766823128}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5b04cabe8a246c04a90e009df7f037af, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  parentAIController: {fileID: 1422197953}
 --- !u!64 &766823133
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -2617,19 +2604,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: -7912839274383312627, guid: 5c11843321e309f4e880c7daca2b951b, type: 3}
   m_PrefabInstance: {fileID: 7598119644510935323}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &843375329
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 843375328}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5b04cabe8a246c04a90e009df7f037af, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  parentAIController: {fileID: 1422197953}
 --- !u!64 &843375333
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -6400,7 +6374,7 @@ WheelCollider:
     targetPosition: 0.5
   m_SuspensionDistance: 0
   m_ForceAppPointDistance: 0
-  m_Mass: 20
+  m_Mass: 2
   m_WheelDampingRate: 0.25
   m_ForwardFriction:
     m_ExtremumSlip: 0.4
@@ -6491,7 +6465,7 @@ WheelCollider:
     targetPosition: 0.5
   m_SuspensionDistance: 0
   m_ForceAppPointDistance: 0
-  m_Mass: 20
+  m_Mass: 2
   m_WheelDampingRate: 0.25
   m_ForwardFriction:
     m_ExtremumSlip: 0.4

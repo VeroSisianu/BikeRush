@@ -16,7 +16,8 @@ public class AIController : MonoBehaviour
     public RigidbodyConstraints unFreezed = new RigidbodyConstraints();
     [HideInInspector]
     public int countWheels = 0;
-
+    private WheelCollider[] wheelCollliders;
+    private bool isGroundedWithBothWheels;
 
     List<Coroutine> routines = new List<Coroutine>();
     List <Collider> colsList = new List<Collider>();
@@ -27,7 +28,7 @@ public class AIController : MonoBehaviour
 
     void Awake()
     {
-        
+        wheelCollliders = GetComponentsInChildren<WheelCollider>();
         originalZVelocity = velocity.z;
         rb = GetComponent<Rigidbody>();
         unFreezed = rb.constraints;
@@ -42,15 +43,44 @@ public class AIController : MonoBehaviour
     }
     private void Update()
     {
-        if(colsList.Count>0)
+        CheckIfTheWheelsTouchTheGround();
+
+        if (colsList.Count > 0)
         {
-            foreach(Collider col in colsList)
+            foreach (Collider col in colsList)
             {
                 if (Vector3.Distance(col.transform.position, transform.position) < 3 && routine == null)
                     CalculateRoute();
             }
         }
     }
+
+    private void CheckIfTheWheelsTouchTheGround()
+    {
+        var countWheels = 0;
+
+        foreach (var wheel in wheelCollliders)
+        {
+            if (wheel.GetGroundHit(out WheelHit hit))
+            {
+                if (hit.collider.CompareTag("Ground"))
+                {
+                    countWheels++;
+                    if (countWheels == 2 && rb.freezeRotation!=true)
+                    {
+                        rb.freezeRotation = true;
+                        Debug.Log("FREEZE1");
+                    }
+                }
+                else
+                {
+                    if(rb.freezeRotation == true)
+                        rb.constraints = unFreezed;
+                }
+            }
+        }
+    }
+
     private void OnTriggerEnter(Collider other)
     {
         if((other.CompareTag("Obstacle") && other.isTrigger) || (other.CompareTag("Player") && other.isTrigger))
@@ -70,6 +100,7 @@ public class AIController : MonoBehaviour
         else if(other.CompareTag("Booster") && other.isTrigger)
         {
             rb.constraints = unFreezed;
+            Debug.Log("UNFREEZE");
             //velocity.x = 0;
             rb.AddForce(Vector3.forward * 2, ForceMode.VelocityChange);
         }
