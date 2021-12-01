@@ -11,15 +11,15 @@ public class AIController : MonoBehaviour
     public float AnimatorSpeed;
     public float VelocityGrowthModifier;
     private float originalZVelocity;
-    Animator anim;
+    public Animator anim;
     Coroutine routine;
     public RigidbodyConstraints unFreezed = new RigidbodyConstraints();
     [HideInInspector]
     private bool IsOnBooster = false;
     private WheelCollider[] wheelCollliders;
     private bool canRotate;
-    private Vector3 BoosterDirection; 
-
+    private Vector3 BoosterDirection;
+    public int Place = 1;
     List<Coroutine> routines = new List<Coroutine>();
     List <Collider> colsList = new List<Collider>();
 
@@ -29,6 +29,8 @@ public class AIController : MonoBehaviour
     private int wheelsOnTheGround = 2;
     private bool isGrounded = true;
     public float zVelocityModifier = 2f;
+
+    
     void Awake()
     {
         wheelCollliders = GetComponentsInChildren<WheelCollider>();
@@ -248,7 +250,6 @@ public class AIController : MonoBehaviour
                     maxDistance = Vector3.Distance(colsList[j].transform.position, colsList[i].transform.position);
                     index = i;
                 }
-                Debug.Log("route2");
             }
         }
         return maxDistance;
@@ -342,5 +343,13 @@ public class AIController : MonoBehaviour
             yield return new WaitForFixedUpdate();
         }
     }
-    
+
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            //fall
+        }
+    }
 }

@@ -8,13 +8,13 @@ public class PlayerController : MonoBehaviour
     public float VelocityDelta = 0.2f;
     public float MaxVelocity = 4f;
     public float GrowVelocityX = 1000f;
-    Rigidbody rb;
-    Animator anim;
-
+    public Rigidbody rb;
+    public Animator anim;
+    public int Place;
     private Vector3 startPos;
     private Vector3 currentPos;
     private Vector2 bounds = new Vector2(32.5f, 38);
-
+    public bool Finished;
 
     void Start()
     {
@@ -30,7 +30,12 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        ReceiveInput();
+        if (!Finished)
+            ReceiveInput();
+        else if (rb.velocity.z > 0.1f)
+            rb.velocity -= rb.velocity * 0.8f;
+        else
+            this.enabled = false;
     }
 
     private void ReceiveInput()
@@ -106,5 +111,14 @@ public class PlayerController : MonoBehaviour
        {
             rb.AddForce(transform.forward * 2, ForceMode.VelocityChange);
        }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if(collision.gameObject.CompareTag("Player"))
+        {
+            //fall
+
+        }
     }
 }
