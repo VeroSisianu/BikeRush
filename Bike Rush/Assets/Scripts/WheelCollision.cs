@@ -31,28 +31,28 @@ public class WheelCollision : MonoBehaviour
     //        }
     //    }
     //}
-    private void OnCollisionEnter(Collision collision)
-    {
-        Debug.Log(parentAIController.countWheels);
+    //private void OnCollisionEnter(Collision collision)
+    //{
+    //    Debug.Log(parentAIController.IsOnBooster);
 
-        if (collision.gameObject.CompareTag("Ground"))
-        {
-            parentAIController.countWheels++;
-            if (parentAIController.countWheels == 2)
-            {
-                parentAIController.rb.constraints = RigidbodyConstraints.FreezeRotationX;
-            }
-        }
-    }
-    private void OnCollisionExit(Collision collision)
-    {
-        if (collision.gameObject.CompareTag("Ground"))
-        {
-            parentAIController.countWheels--;
-            if (parentAIController.countWheels == 0)
-            {
-                parentAIController.rb.constraints = parentAIController.unFreezed;
-            }
-        }
-    }
+    //    if (collision.gameObject.CompareTag("Ground"))
+    //    {
+    //        parentAIController.IsOnBooster++;
+    //        if (parentAIController.IsOnBooster == 2)
+    //        {
+    //            parentAIController.rb.constraints = RigidbodyConstraints.FreezeRotationX;
+    //        }
+    //    }
+    //}
+    //private void OnCollisionExit(Collision collision)
+    //{
+    //    if (collision.gameObject.CompareTag("Ground"))
+    //    {
+    //        parentAIController.IsOnBooster--;
+    //        if (parentAIController.IsOnBooster == 0)
+    //        {
+    //            parentAIController.rb.constraints = parentAIController.unFreezed;
+    //        }
+    //    }
+    //}
 }

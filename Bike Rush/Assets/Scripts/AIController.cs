@@ -15,9 +15,10 @@ public class AIController : MonoBehaviour
     Coroutine routine;
     public RigidbodyConstraints unFreezed = new RigidbodyConstraints();
     [HideInInspector]
-    public int countWheels = 0;
+    private bool IsOnBooster = false;
     private WheelCollider[] wheelCollliders;
-    private bool isGroundedWithBothWheels;
+    private bool canRotate;
+    private Vector3 BoosterDirection; 
 
     List<Coroutine> routines = new List<Coroutine>();
     List <Collider> colsList = new List<Collider>();
@@ -25,7 +26,9 @@ public class AIController : MonoBehaviour
     private bool hasBikeOnLeft;
     private bool hasBikeOnRight;
 
-
+    private int wheelsOnTheGround = 2;
+    private bool isGrounded = true;
+    public float zVelocityModifier = 2f;
     void Awake()
     {
         wheelCollliders = GetComponentsInChildren<WheelCollider>();
@@ -39,12 +42,11 @@ public class AIController : MonoBehaviour
 
     void FixedUpdate()
     {
-        rb.velocity = new Vector3(velocity.x, rb.velocity.y, velocity.z);
+        rb.velocity = new Vector3(velocity.x, velocity.y, velocity.z);
     }
     private void Update()
     {
-        CheckIfTheWheelsTouchTheGround();
-
+        CheckIfTheWheelsHitTheGround();
         if (colsList.Count > 0)
         {
             foreach (Collider col in colsList)
@@ -55,28 +57,67 @@ public class AIController : MonoBehaviour
         }
     }
 
-    private void CheckIfTheWheelsTouchTheGround()
+    private void CheckIfTheWheelsHitTheGround()
     {
-        var countWheels = 0;
-
+        wheelsOnTheGround = 0;
+        WheelHit hit;
         foreach (var wheel in wheelCollliders)
         {
-            if (wheel.GetGroundHit(out WheelHit hit))
+            if (wheel.GetGroundHit(out hit))
             {
+                velocity.z = originalZVelocity;
+                isGrounded = true;
+
+
+
                 if (hit.collider.CompareTag("Ground"))
                 {
-                    countWheels++;
-                    if (countWheels == 2 && rb.freezeRotation!=true)
+                    wheelsOnTheGround++;
+                    if (wheelsOnTheGround == 2 && rb.freezeRotation != true)
                     {
                         rb.freezeRotation = true;
-                        Debug.Log("FREEZE1");
                     }
                 }
-                else
+            }
+        }
+        foreach (var wheel in wheelCollliders)
+        {
+            if (wheel.GetGroundHit(out hit))
+            {
+                velocity.z = originalZVelocity;
+                isGrounded = true;
+                if (hit.collider.CompareTag("Booster") || hit.collider.CompareTag("BoosterHill"))
                 {
-                    if(rb.freezeRotation == true)
+                    if (hit.collider.CompareTag("BoosterHill") && !IsOnBooster && rb.constraints != unFreezed)
+                    {
                         rb.constraints = unFreezed;
+                        Debug.Log("unfreezing1");
+                    }
+                    wheelsOnTheGround++;
+                    if (wheelsOnTheGround == 2)
+                    {
+                        IsOnBooster = true;
+                    }
                 }
+            }
+        }
+       // RotateIfInTheAir();
+    }
+
+    private void RotateIfInTheAir()
+    {
+        if (wheelsOnTheGround == 0 && !IsOnBooster)
+        {
+            transform.Rotate(Vector3.right, 25);
+            isGrounded = false;
+        }
+        else
+        {
+            if ((transform.eulerAngles.x < 15 && transform.eulerAngles.x > -15) && !isGrounded && transform.position.y<1.5f)
+            {
+
+                Debug.Log("ground is near, FREEEZE");
+                rb.angularVelocity -= rb.angularVelocity/2;
             }
         }
     }
@@ -87,22 +128,14 @@ public class AIController : MonoBehaviour
         {
             StopAllCoroutines();
             colsList.Add(other);
-            //CalculateRoute();
         }
         else if(other.CompareTag("BoosterZone"))
         {
             if(colsList.Count == 0)
             {
-                var BoosterDirection = new Vector3(other.transform.position.x, other.transform.position.y, other.transform.position.z - 9);
+                BoosterDirection = new Vector3(other.transform.GetChild(0).position.x, transform.position.y, other.transform.GetChild(0).position.z - 3);
                 velocity.x = (BoosterDirection - transform.position).normalized.x * VelocityGrowthModifier;
             }
-        }
-        else if(other.CompareTag("Booster") && other.isTrigger)
-        {
-            rb.constraints = unFreezed;
-            Debug.Log("UNFREEZE");
-            //velocity.x = 0;
-            rb.AddForce(Vector3.forward * 2, ForceMode.VelocityChange);
         }
     }
 
@@ -113,17 +146,21 @@ public class AIController : MonoBehaviour
         {
             if (colsList.Count == 0)
             {
-                var BoosterDirection = new Vector3(other.transform.position.x, other.transform.position.y, other.transform.position.z - 9);
                 velocity.x = (BoosterDirection - transform.position).normalized.x * VelocityGrowthModifier;
             }
         }
-        else if (other.CompareTag("Booster") && other.isTrigger)
+        else if ((other.CompareTag("Booster") || other.CompareTag("BoosterHill")) && other.isTrigger)
         {
             if (colsList.Count == 0 && transform.position.x <= other.transform.position.x + 0.001f && transform.position.x >= other.transform.position.x - 0.001f)
             {
                 velocity.x = 0;
             }
-            rb.AddForce(Vector3.forward * 2, ForceMode.VelocityChange);
+            if (IsOnBooster == true)
+            {
+                if(rb.freezeRotation == false)
+                    rb.freezeRotation = true;
+                velocity.z += zVelocityModifier;
+            }
         }
     }
     private void OnTriggerExit(Collider other)
@@ -138,9 +175,12 @@ public class AIController : MonoBehaviour
                 velocity.x = 0;
                 if (colsList.Count == 0)
                     velocity.z = originalZVelocity;
-                //if(colsList.Count > 0)
-                //    CalculateRoute();
             }
+        }
+        else if(other.CompareTag("Booster") || other.CompareTag("BoosterHill"))
+        {
+            velocity.z += zVelocityModifier;
+            IsOnBooster = false;
         }
     }
 
@@ -149,7 +189,6 @@ public class AIController : MonoBehaviour
         if(colsList.Count == 1)
         {
             StopAllCoroutines();
-            Debug.Log("route1");
             routine = StartCoroutine(MoveAway(colsList[0]));
         }
         else
